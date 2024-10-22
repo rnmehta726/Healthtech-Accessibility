@@ -13,13 +13,17 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
+      "googleServicesFile":"./GoogleService-Info.plist",
+      "bundleIdentifier": "com.healthtechaccessibility.alsapp",
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.healthtechaccessibility.alsapp"
     },
     "web": {
       "bundler": "metro",
@@ -27,7 +31,16 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "@react-native-firebase/app",
+      "expo-router",
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
