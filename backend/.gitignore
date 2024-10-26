@@ -1,0 +1,4 @@
+# virtual environment with dependencies
+venv/
+*.venv
+.env

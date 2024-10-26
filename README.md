@@ -1,1 +1,0 @@
-# Healthtech-Accessibility
