@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -10,24 +10,37 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, StackScreenProps } from '@react-navigation/stack';
 
-// define the types for the navigation stack
 type RootStackParamList = {
-  Home: undefined;
+  Home: { newPage?: { id: number; title: string; buttons: string[] } };
   EditPage: undefined;
   DynamicPage: { pageId: number; title: string; buttons: string[] };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-// dynamicPage Component - Displays the customized page with "Return to Home" button
 const DynamicPage = ({ route, navigation }: StackScreenProps<RootStackParamList, 'DynamicPage'>) => {
   const { title, buttons } = route.params;
+  const [inputText, setInputText] = useState('');
+
+  const handleButtonPress = (buttonText: string) => {
+    setInputText((prevText) => prevText + buttonText);   // Set the TextInput field with the button's label
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
+      <TextInput
+        style={styles.inputField}
+        placeholder="Type here..."
+        value={inputText}
+        onChangeText={setInputText}
+      />
       {buttons.map((buttonText, index) => (
-        <TouchableOpacity key={index} style={styles.pageButton}>
+        <TouchableOpacity
+          key={index}
+          style={styles.pageButton}
+          onPress={() => handleButtonPress(buttonText)}
+        >
           <Text style={styles.pageButtonText}>{buttonText}</Text>
         </TouchableOpacity>
       ))}
@@ -41,8 +54,7 @@ const DynamicPage = ({ route, navigation }: StackScreenProps<RootStackParamList,
   );
 };
 
-// editPage Component - allows user to define title and button labels for a new page
-const EditPage = ({ navigation, route }: StackScreenProps<RootStackParamList, 'EditPage'>) => {
+const EditPage = ({ navigation }: StackScreenProps<RootStackParamList, 'EditPage'>) => {
   const [title, setTitle] = useState('');
   const [buttons, setButtons] = useState(Array(6).fill(''));
 
@@ -53,10 +65,9 @@ const EditPage = ({ navigation, route }: StackScreenProps<RootStackParamList, 'E
   };
 
   const savePage = () => {
-    const pageId = Date.now(); // generate a new page ID
+    const pageId = Date.now();
     const newPage = { id: pageId, title, buttons };
 
-    // navigate to Home with new page data
     navigation.navigate('Home', { newPage });
   };
 
@@ -86,14 +97,15 @@ const EditPage = ({ navigation, route }: StackScreenProps<RootStackParamList, 'E
   );
 };
 
-// homeScreen Component - displays list of pages and the button to add a new page
 const HomeScreen = ({ navigation, route }: StackScreenProps<RootStackParamList, 'Home'>) => {
   const [pages, setPages] = useState<{ id: number; title: string; buttons: string[] }[]>([]);
 
-  // if route params contain a newPage, add it to the list of pages
-  React.useEffect(() => {
+  useEffect(() => {
     if (route.params?.newPage) {
-      setPages((prevPages) => [...prevPages, route.params.newPage]);
+      setPages((prevPages) => {
+        const pageExists = prevPages.some((page) => page.id === route.params?.newPage?.id);
+        return pageExists ? prevPages : [...prevPages, route.params.newPage!];
+      });
     }
   }, [route.params?.newPage]);
 
@@ -102,13 +114,13 @@ const HomeScreen = ({ navigation, route }: StackScreenProps<RootStackParamList, 
       style={styles.pageButton}
       onPress={() => navigation.navigate('DynamicPage', { pageId: item.id, title: item.title, buttons: item.buttons })}
     >
-      <Text style={styles.pageButtonText}> {item.title}</Text>
+      <Text style={styles.pageButtonText}>Go to {item.title}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Persona Page</Text>
+      <Text style={styles.title}>Home Screen</Text>
       <FlatList
         data={pages}
         renderItem={renderPageButton}
@@ -124,10 +136,9 @@ const HomeScreen = ({ navigation, route }: StackScreenProps<RootStackParamList, 
   );
 };
 
-// app component - sets up the navigation stack
 export default function App() {
   return (
-    <NavigationContainer independent={true}>
+    <NavigationContainer independent ={true}>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="EditPage" component={EditPage} />
@@ -137,7 +148,6 @@ export default function App() {
   );
 }
 
-// styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -170,9 +180,10 @@ const styles = StyleSheet.create({
   pageButton: {
     backgroundColor: '#007BFF',
     padding: 30,
+    justifyContent: 'center',
     borderRadius: 10,
     marginVertical: 5,
-    width: '100%',
+    width: '80%',
     alignItems: 'center',
   },
   pageButtonText: {
@@ -190,6 +201,13 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 8,
     width: '100%',
+  },
+  inputField: {
+    backgroundColor: '#e0e0e0',
+    borderRadius: 8,
+    padding: 10,
+    marginVertical: 10,
+    width: '80%',
   },
   saveButton: {
     backgroundColor: '#4CAF50',
