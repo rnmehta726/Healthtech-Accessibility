@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../app';
+import { RootStackParamList } from '..';
 
-type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Login'>;
+type SignupScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Signup'>;
 
-interface LoginScreenProps {
-  navigation: LoginScreenNavigationProp;
+interface SignupScreenProps {
+  navigation: SignupScreenNavigationProp;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [errortext, setErrortext] = useState<string>('');
 
-  const handleLogin = () => {
+  const handleSignup = () => {
     setErrortext('');
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
     if (!email) {
-      alert('Please fill Email');
+      alert('Please fill Name');
       return;
     }
     if (!password) {
       alert('Please fill Password');
       return;
     }
-    let dataToSend = {email: email, password: password};
+    //Show Loader
+    
+    var dataToSend = {
+      email: email,
+      password: password,
+    };
 
-    fetch('http://localhost:3000/login', {
+    fetch('http://localhost:3000/signup', {
       method: 'POST',
       body: JSON.stringify(dataToSend),
       headers: {
@@ -37,13 +47,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     })
       .then((response) => response.json())
       .then((responseJson) => {
+       
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status === 'success') {
-          console.log(responseJson.data.email);
+          console.log(
+            'Registration Successful. Please Login to proceed'
+          );
         } else {
           setErrortext(responseJson.msg);
-          console.log('Please check your email id or password');
         }
       })
       .catch((error) => {
@@ -54,7 +66,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Login</Text>
+      <Text style={styles.heading}>Sign Up</Text>
       <TextInput
         style={styles.input}
         placeholder="Email"
@@ -68,10 +80,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         value={password}
         onChangeText={setPassword}
       />
-      <Button title="Login" onPress={handleLogin} />
-      <View style={styles.signupContainer}>
-        <Text>Don't have an account? </Text>
-        <Button title="Sign Up" onPress={() => navigation.navigate('Signup')} />
+      <TextInput
+        style={styles.input}
+        placeholder="Confirm Password"
+        secureTextEntry
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+      />
+      <Button title="Sign Up" onPress={handleSignup} />
+      <View style={styles.loginContainer}>
+        <Text>Already have an account? </Text>
+        <Button title="Login" onPress={() => navigation.navigate('Login')} />
       </View>
       {errortext != '' ? (
               <Text style={styles.errorTextStyle}>
@@ -102,7 +121,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingLeft: 10,
   },
-  signupContainer: {
+  loginContainer: {
     marginTop: 20,
     alignItems: 'center',
   },
@@ -113,4 +132,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default SignupScreen;
