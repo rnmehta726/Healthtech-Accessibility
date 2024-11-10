@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../types/types.ts';
-import styles from '../styles/styles.ts';
+import { RootStackParamList } from '../types/types';
+import styles from '../styles/styles';
 
 const HomeScreen = ({ navigation, route }: StackScreenProps<RootStackParamList, 'Home'>) => {
   const [pages, setPages] = useState<{ id: number; title: string; buttons: string[] }[]>([]);
