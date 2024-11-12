@@ -1,4 +1,4 @@
-// src/styles/styles.ts
+// app/styles/styles.ts
 import { StyleSheet } from 'react-native';
 
 const styles = StyleSheet.create({
@@ -9,7 +9,6 @@ const styles = StyleSheet.create({
       backgroundColor: '#f8f8f8',
     },
     row: {
-      justifyContent: 'space-between', // Space between columns in the grid
       marginBottom: 10, // Space between rows
     },
     personaButton: {
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
       height: 98,
       justifyContent: 'center',
       alignItems: 'center',
-      borderRadius: 10,
+      borderRadius: 10, // curves button
       marginHorizontal: 5,
       marginBottom: 10,
     },
@@ -85,6 +84,7 @@ const styles = StyleSheet.create({
       color: '#516FC9',
       textAlign: 'center',
     },
+
     container: {
       flex: 1,
       padding: 16,

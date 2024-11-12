@@ -32,4 +32,3 @@ const BottomTabNavigator = () => {
 };
 
 export default BottomTabNavigator;
-

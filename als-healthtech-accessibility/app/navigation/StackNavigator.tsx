@@ -1,10 +1,10 @@
-// src/navigation/StackNavigator.tsx
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
-import HomeScreen from '../components/HomeScreen';
-import EditPage from '../components/EditPage';
-import DynamicPage from '../components/DynamicPage';
-import { RootStackParamList } from '../types/types';
+// app/navigation/StackNavigator.tsx
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "../components/HomeScreen";
+import EditPage from "../components/EditPage";
+import DynamicPage from "../components/DynamicPage";
+import { RootStackParamList } from "../types/types";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
