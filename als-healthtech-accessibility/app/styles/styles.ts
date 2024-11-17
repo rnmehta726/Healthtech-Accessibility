@@ -159,9 +159,26 @@ const styles = StyleSheet.create({
       alignItems: 'center',
     },
     returnButtonText: {
-      color: '#ffffff',
+      backgroundColor: '#000',
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      marginRight: 10,
+    },
+
+    enterButton: {
+      backgroundColor: '#4CAF50',
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 20,
+      marginRight: 10,
+    },
+
+    enterButtonText: {
+      color: "#fff",
       fontSize: 16,
-      fontWeight: 'bold',
+      fontWeight: "bold",
+      textAlign: "center",
     },
 
 
