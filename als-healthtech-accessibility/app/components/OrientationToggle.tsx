@@ -1,5 +1,4 @@
 // app/components/OrientationToggle.tsx
-// I don't know how to test this
 import React, { useState, useEffect } from 'react';
 import { View, Switch, Text } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
@@ -9,7 +8,7 @@ const OrientationToggle = () => {
 
   const toggleOrientation = async () => {
     if (isLandscape) {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
     } else {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
     }

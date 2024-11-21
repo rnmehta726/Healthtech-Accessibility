@@ -1,9 +1,18 @@
-// src/components/EditPage.tsx
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '..';
-import styles from '../styles/styles';
+// app/components/EditPage.tsx
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "..";
+import styles from "../styles/styles";
 import { NativeStackNavigationProp } from 'react-native-screens/lib/typescript/native-stack/types';
 
 type EditScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
@@ -26,7 +35,7 @@ const EditPage: React.FC<EditScreenProps> = ({ navigation, route }) => {
       Alert.alert("Limit Reached", "You can only add up to 20 buttons.");
       return;
     }
-    setButtons([...buttons, '']);
+    setButtons([...buttons, ""]);
   };
 
   // Handle text change for each button's label
@@ -62,7 +71,13 @@ const EditPage: React.FC<EditScreenProps> = ({ navigation, route }) => {
   };
 
   // Render each button input field in the list
-  const renderButtonInput = ({ item, index }: { item: string; index: number }) => (
+  const renderButtonInput = ({
+    item,
+    index,
+  }: {
+    item: string;
+    index: number;
+  }) => (
     <TextInput
       key={index}
       style={styles.input} // Reuse the input style
@@ -73,34 +88,42 @@ const EditPage: React.FC<EditScreenProps> = ({ navigation, route }) => {
   );
 
   return (
-    <View style={styles.container}>
-      {/* Title Input */}
-      <Text style={styles.label}>Persona Title:</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Persona Title"
-        value={title}
-        onChangeText={setTitle}
-      />
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={100}
+    >
+      <View style={styles.container}>
+        {/* Title Input */}
+        <Text style={styles.label}>Persona Title:</Text>
+        <TextInput
+          testID="PersonaTitle"
+          style={styles.input}
+          placeholder="Persona Title"
+          value={title}
+          onChangeText={setTitle}
+        />
 
-      {/* Dynamic Button Inputs */}
-      <Text style={styles.label}>Saved Phrases:</Text>
-      <FlatList
-        data={buttons}
-        renderItem={renderButtonInput}
-        keyExtractor={(item, index) => index.toString()}
-      />
+        {/* Dynamic Button Inputs */}
+        <Text style={styles.label}>Saved Phrases:</Text>
+        <FlatList
+          data={buttons}
+          testID="SavedPhrases"
+          renderItem={renderButtonInput}
+          keyExtractor={(item, index) => index.toString()}
+        />
 
-      {/* Add New Button */}
-      <TouchableOpacity style={styles.addButton} onPress={addNewButton}>
-        <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
+        {/* Add New Button */}
+        <TouchableOpacity style={styles.addButton} onPress={addNewButton}>
+          <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
 
-      {/* Save Page Button */}
-      <TouchableOpacity style={styles.saveButton} onPress={savePage}>
-        <Text style={styles.saveButtonText}>Save</Text>
-      </TouchableOpacity>
-    </View>
+        {/* Save Page Button */}
+        <TouchableOpacity style={styles.saveButton} onPress={savePage}>
+          <Text style={styles.saveButtonText}>Save</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 };
 

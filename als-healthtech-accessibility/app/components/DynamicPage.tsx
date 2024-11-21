@@ -1,58 +1,95 @@
 // app/components/DynamicPage.tsx
-import React, { useState, useRef } from 'react';
-import { Text, View, TouchableOpacity, TextInput, ScrollView, Button, Dimensions } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../types/types';
-import dynamicPageStyles from '../styles/styles';
+import React, { useState, useRef } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { StackScreenProps } from "@react-navigation/stack";
+import { RootStackParamList } from "../types/types";
+import dynamicPageStyles from "../styles/styles";
 
-const DynamicPage = ({ route, navigation }: StackScreenProps<RootStackParamList, 'DynamicPage'>) => {
+const DynamicPage = ({
+  route,
+}: StackScreenProps<RootStackParamList, "DynamicPage">) => {
   const { title, buttons } = route.params;
-  const [inputText, setInputText] = useState('');
+  const [inputText, setInputText] = useState(""); // Current input text
+  const [inputHistory, setInputHistory] = useState<string[]>([]); // History of saved inputs
   const inputRef = useRef<TextInput>(null);
 
-
-  // Handle button press to add text to input
+  // Append button text to the input field
   const handleButtonPress = (buttonText: string) => {
     setInputText((prevText) => prevText + buttonText);
     inputRef.current?.focus();
   };
 
-  // Clear the last entry
+  // Undo functionality to revert to the previous entry in history
   const handleUndo = () => {
-    setInputText('');
+    if (inputHistory.length > 0) {
+      const previousInput = inputHistory[inputHistory.length - 1] || "";
+      setInputText(previousInput); // Restore the last saved input
+      setInputHistory(inputHistory.slice(0, -1)); // Remove the last entry from history
+    }
+  };
+
+  // Save the current text to history and clear the input field
+  const handleEnter = () => {
+    if (inputText) {
+      setInputHistory((prevHistory) => [...prevHistory, inputText]); // Save current text
+      setInputText(""); // Clear input field
+    }
   };
 
   return (
-    <View style={dynamicPageStyles.container}>
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={200}
+    >
+      <View style={dynamicPageStyles.container}>
+        <Text style={dynamicPageStyles.title}>{title}</Text>
 
-      {/* Buttons Section */}
-      <ScrollView contentContainerStyle={dynamicPageStyles.buttonsContainer}>
-        {buttons.map((buttonText, index) => (
+        {/* Buttons Section */}
+        <ScrollView contentContainerStyle={dynamicPageStyles.buttonsContainer}>
+          {buttons.map((buttonText, index) => (
+            <TouchableOpacity
+              key={index}
+              style={dynamicPageStyles.largeButton}
+              onPress={() => handleButtonPress(buttonText)}
+            >
+              <Text style={dynamicPageStyles.buttonText}>{buttonText}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
+
+        {/* Input Field and Buttons */}
+        <View style={dynamicPageStyles.inputContainer}>
+          <TextInput
+            ref={inputRef}
+            style={dynamicPageStyles.inputField}
+            placeholder="Type here..."
+            value={inputText}
+            onChangeText={setInputText}
+          />
           <TouchableOpacity
-            key={index}
-            style={dynamicPageStyles.largeButton}
-            onPress={() => handleButtonPress(buttonText)}
+            onPress={handleUndo}
+            style={dynamicPageStyles.undoButton}
           >
-            <Text style={dynamicPageStyles.buttonText}>{buttonText}</Text>
+            <Text style={dynamicPageStyles.undoButtonText}>Undo</Text>
           </TouchableOpacity>
-        ))}
-      </ScrollView>
-
-      {/* Input Field and Undo Button at the Bottom */}
-      <View style={dynamicPageStyles.inputContainer}>
-        <TextInput
-          ref={inputRef}
-          style={dynamicPageStyles.inputField}
-          placeholder="Type here..."
-          value={inputText}
-          onChangeText={setInputText}
-        />
-        <TouchableOpacity onPress={handleUndo} style={dynamicPageStyles.undoButton}>
-          <Text style={dynamicPageStyles.undoButtonText}>Undo</Text>
-        </TouchableOpacity>
-
+          <TouchableOpacity
+            onPress={handleEnter}
+            style={dynamicPageStyles.enterButton}
+          >
+            <Text style={dynamicPageStyles.enterButtonText}>Enter</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

@@ -18,9 +18,13 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 
 const App: React.FC = () => {
+
+import BottomTabNavigator from './navigation/BottomTabNavigator';
+
+export default function App() {
   return (
     <NavigationContainer independent={true} >
-      <Stack.Navigator initialRouteName="Login">
+      <BottomTab.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />

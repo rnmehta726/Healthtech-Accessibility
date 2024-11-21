@@ -1,4 +1,4 @@
-// src/components/HomeScreen.tsx
+// app/components/HomeScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, FlatList } from 'react-native';
 import { RootStackParamList } from '..';
@@ -61,7 +61,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   );
 
   return (
-    <View style={styles.homeContainer}>
+    <View style={styles.homeContainer} testID="HomeScreen">
       <Text style={styles.title}>Your Personas</Text>
       <FlatList
         data={pages}
