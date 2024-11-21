@@ -7,9 +7,10 @@ type LoginScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, '
 
 interface LoginScreenProps {
   navigation: LoginScreenNavigationProp;
+  route: any;
 }
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, route }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errortext, setErrortext] = useState<string>('');
@@ -40,13 +41,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status === 'success') {
-          console.log(responseJson.data.email);
+          console.log(responseJson.idToken);
+          navigation.navigate('Home', {userId: responseJson.idToken} );
         } else {
           setErrortext(responseJson.msg);
           console.log('Please check your email id or password');
         }
       })
       .catch((error) => {
+        setErrortext("Unable to Log In");
         console.log("failed");
         console.error(error);
       });

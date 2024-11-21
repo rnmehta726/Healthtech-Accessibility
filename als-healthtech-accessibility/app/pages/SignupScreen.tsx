@@ -7,9 +7,10 @@ type SignupScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 
 
 interface SignupScreenProps {
   navigation: SignupScreenNavigationProp;
+  route: any;
 }
 
-const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
+const SignupScreen: React.FC<SignupScreenProps> = ({ navigation, route }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
@@ -51,9 +52,7 @@ const SignupScreen: React.FC<SignupScreenProps> = ({ navigation }) => {
         console.log(responseJson);
         // If server response message same as Data Matched
         if (responseJson.status === 'success') {
-          console.log(
-            'Registration Successful. Please Login to proceed'
-          );
+          navigation.navigate("Login");
         } else {
           setErrortext(responseJson.msg);
         }
