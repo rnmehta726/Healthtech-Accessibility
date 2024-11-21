@@ -6,6 +6,7 @@ import SignupScreen from './pages/SignupScreen';
 import HomeScreen from './components/HomeScreen';
 import EditPage from './components/EditPage';
 import DynamicPage from './components/DynamicPage';
+import BottomTabNavigator from './navigation/BottomTabNavigator'
 
 export type RootStackParamList = {
   Login: undefined;
@@ -17,14 +18,10 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 
-const App: React.FC = () => {
-
-import BottomTabNavigator from './navigation/BottomTabNavigator';
-
-export default function App() {
+const App: React.FC = () =>  {
   return (
     <NavigationContainer independent={true} >
-      <BottomTab.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
