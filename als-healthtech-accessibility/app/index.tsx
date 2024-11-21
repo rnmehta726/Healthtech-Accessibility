@@ -1,15 +1,35 @@
-import { Text, View } from "react-native";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './pages/LoginScreen';
+import SignupScreen from './pages/SignupScreen';
+import HomeScreen from './components/HomeScreen';
+import EditPage from './components/EditPage';
+import DynamicPage from './components/DynamicPage';
+import BottomTabNavigator from './navigation/BottomTabNavigator'
 
-export default function Index() {
+export type RootStackParamList = {
+  Login: undefined;
+  Signup: undefined;
+  Home: { userId: string };
+  EditPage: { userId: string };
+  DynamicPage: { pageId: number, title: string, buttons: string[] };
+};
+
+const Stack = createStackNavigator<RootStackParamList>();
+
+const App: React.FC = () =>  {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text>Edit app/index.tsx to edit this screen.</Text>
-    </View>
+    <NavigationContainer independent={true} >
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Signup" component={SignupScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="EditPage" component={EditPage} />
+        <Stack.Screen name="DynamicPage" component={DynamicPage} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
+
+export default App;
