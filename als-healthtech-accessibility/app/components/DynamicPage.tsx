@@ -12,6 +12,24 @@ import {
 import { StackScreenProps } from "@react-navigation/stack";
 import { RootStackParamList } from "../types/types";
 import dynamicPageStyles from "../styles/styles";
+import PersonalVoiceModule from './PersonalVoiceModule';
+import * as Speech from 'expo-speech';
+
+const checkPersonalVoice = async () => {
+  const available = await PersonalVoiceModule.isPersonalVoiceAvailable();
+  console.log("Personal Voice available:", available);
+  return available
+};
+
+const speakWithPersonalVoice = (text: string) => {
+  try {
+    //await PersonalVoiceModule.speakWithPersonalVoice(text);
+    Speech.speak(text);
+    console.log("Speech initiated!");
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const DynamicPage = ({
   route,
@@ -37,10 +55,15 @@ const DynamicPage = ({
   };
 
   // Save the current text to history and clear the input field
-  const handleEnter = () => {
+  const handleEnter = async () => {
     if (inputText) {
       setInputHistory((prevHistory) => [...prevHistory, inputText]); // Save current text
       setInputText(""); // Clear input field
+      speakWithPersonalVoice(inputText);
+      // const available = await checkPersonalVoice();
+      // if(available){
+      //   speakWithPersonalVoice(inputText);
+      // }
     }
   };
 
